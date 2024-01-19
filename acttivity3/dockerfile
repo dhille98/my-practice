@@ -1,5 +1,5 @@
 FROM amazoncorretto:17-alpine3.17-jdk
-LABEL auther="dhille"
+LABEL author="dhille"
 LABEL project="learing"
 EXPOSE 8080
 # create user
