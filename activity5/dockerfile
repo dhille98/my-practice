@@ -1,0 +1,21 @@
+FROM mcr.microsoft.com/dotnet/sdk:7.0
+LABEL auther="dhille"
+LABEL project="learning"
+ARG user=dhille
+ARG uid=1006
+ARG group=dhille
+ARG gid=1006
+ARG home=/nop
+ARG DOWNLOAD_URL=https://github.com/nopSolutions/nopCommerce/releases/download/release-4.60.2/nopCommerce_4.60.2_NoSource_linux_x64.zip
+RUN apt update && apt install unzip -y
+# create a user 
+RUN groupadd -g ${gid} ${group} \
+    && useradd -d "${home}" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+
+USER ${user}
+WORKDIR ${home}
+ADD --chown=${user}:${group} ${DOWNLOAD_URL} ${home}/nopCommerce_4.60.2_NoSource_linux_x64.zip
+RUN unzip ${home}/nopCommerce_4.60.2_NoSource_linux_x64.zip && \
+mkdir ${home}/bin && mkdir ${home}/logs 
+EXPOSE 5000
+CMD [ "dotnet", "Nop.Web.dll", "--urls", "http://0.0.0.0:5000" ]
